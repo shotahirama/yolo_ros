@@ -50,6 +50,7 @@ class Darknet {
   network net_;
   float nms_;
   float thresh_;
+  float hier_;
   std::vector<box> boxes_;
   std::vector<float*> probs_;
   std::vector<std::string> names_;
@@ -73,7 +74,7 @@ class Darknet {
   }
 
  public:
-  Darknet() : nms_(0.4), thresh_(0.24) {}
+  Darknet() : nms_(0.4), thresh_(0.24), hier_(0.5) {}
 
   void load(std::string cfgfile, std::string weightfile, std::string namesfile) {
     srand(2222222);
@@ -92,6 +93,8 @@ class Darknet {
 
   void set_nms(float nms) { this->nms_ = nms; }
 
+  void set_hier(float hier) { this->hier_ = hier; }
+
   yolo_ros::DetectObjectArray detect(cv::Mat src) {
     image im = mat_to_image(src);
     image sized = resize_image(im, net_.w, net_.h);
@@ -106,7 +109,7 @@ class Darknet {
     if (l.type == DETECTION) {
       get_detection_boxes(l, 1, 1, thresh_, probs_.data(), boxes_.data(), 0);
     } else if (l.type == REGION) {
-      get_region_boxes(l, 1, 1, thresh_, probs_.data(), boxes_.data(), 0, 0);
+      get_region_boxes(l, 1, 1, thresh_, probs_.data(), boxes_.data(), 0, 0, hier_);
     }
     if (nms_) {
       do_nms(boxes_.data(), probs_.data(), netsize, l.classes, nms_);
