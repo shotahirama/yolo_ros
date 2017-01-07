@@ -1,0 +1,10 @@
+<launch>
+  <arg name="thresh" default="0.24"/>
+  <arg name="device" default="/dev/video0"/>
+
+  <include file="$(find realsense_camera)/launch/r200_nodelet_rgbd.launch"/>
+  <include file="$(find yolo_ros)/launch/yolo.launch">
+    <arg name="thresh" value="$(arg thresh)"/>
+    <arg name="input" value="/camera/rgb/image_raw"/>
+  </include>
+</launch>

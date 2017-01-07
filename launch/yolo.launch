@@ -1,0 +1,9 @@
+<launch>
+  <arg name="thresh" default="0.24"/>
+  <arg name="input" default="/camera/image_raw"/>
+
+  <node pkg="yolo_ros" name="yolo_node" type="yolo_node">
+    <remap from="/camera/image_raw" to="$(arg input)"/>
+    <param name="thresh" value="$(arg thresh)"/>
+  </node>
+</launch>

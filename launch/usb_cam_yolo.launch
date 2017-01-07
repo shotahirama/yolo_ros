@@ -5,8 +5,8 @@
   <node pkg="usb_cam" name="usb_cam_node" type="usb_cam_node">
     <param name="video_device" value="$(arg device)"/>
   </node>
-  <node pkg="yolo_ros" name="yolo_node" type="yolo_node">
-    <remap from="/camera/image_raw" to="/usb_cam_node/image_raw"/>
-    <param name="thresh" value="$(arg thresh)"/>
-  </node>
+  <include file="$(find yolo_ros)/launch/yolo.launch">
+    <arg name="thresh" value="$(arg thresh)"/>
+    <arg name="input" value="/usb_cam_node/image_raw"/>
+  </include>
 </launch>
